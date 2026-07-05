@@ -1,1 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lab Map</title>
 
+  <link 
+    rel="stylesheet" 
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <link rel="stylesheet" href="lab-map.css" />
+</head>
+
+<body>
+  <div class="map-page">
+    <div id="labMap"></div>
+
+    <aside class="map-sidebar">
+      <div class="sidebar-title">ALL LABS</div>
+
+      <input 
+        id="labSearch" 
+        class="lab-search" 
+        placeholder="Search labs..."
+      />
+
+      <div class="map-actions">
+        <button id="showAllBtn">All</button>
+        <button id="showMappedBtn">Mapped</button>
+        <button id="showUnmappedBtn">Unmapped</button>
+      </div>
+
+      <div id="selectedLabBox" class="selected-lab-box">
+        Select a lab, then click the map to place it.
+      </div>
+
+      <div id="labList"></div>
+    </aside>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="data/labs.js"></script>
+  <script src="lab-map.js"></script>
+</body>
+</html>
