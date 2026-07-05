@@ -1,4 +1,4 @@
-const mapImage = "assets/map/satellite-map-final.png";
+const mapImage = "assets/map/satellite-map-final.jpg";
 
 const imageWidth = 1280;
 const imageHeight = 1280;
