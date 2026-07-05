@@ -21,9 +21,6 @@ const bounds = [[0, 0], [imageHeight, imageWidth]];
 L.imageOverlay(mapImage, bounds).addTo(map);
 map.fitBounds(bounds);
 
-// Starts only slightly closer than full view
-map.setZoom(-0.75);
-
 const markerLayer = L.layerGroup().addTo(map);
 const markerMap = {};
 
