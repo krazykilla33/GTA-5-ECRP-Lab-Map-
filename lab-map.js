@@ -11,7 +11,7 @@ const labs = window.LABS || [];
 const map = L.map("labMap", {
   crs: L.CRS.Simple,
   minZoom: -2,
-  maxZoom: 3,
+  maxZoom: 5,
   zoomSnap: 0.25,
   wheelPxPerZoomLevel: 90
 });
@@ -20,6 +20,9 @@ const bounds = [[0, 0], [imageHeight, imageWidth]];
 
 L.imageOverlay(mapImage, bounds).addTo(map);
 map.fitBounds(bounds);
+
+// Starts the map slightly zoomed in
+map.setView([imageHeight / 2, imageWidth / 2], 0.25);
 
 const markerLayer = L.layerGroup().addTo(map);
 const markerMap = {};
@@ -85,7 +88,7 @@ function renderLabs() {
 
       marker.on("click", () => {
         selectLab(lab.id);
-        highlightLab(lab.id);
+        focusLab(lab.id);
       });
 
       markerMap[lab.id] = marker;
@@ -138,8 +141,18 @@ function focusLab(id) {
 
   if (!lab || !marker) return;
 
-  map.setView([lab.map.y, lab.map.x], 1.5);
-  marker.openPopup();
+  const target = [lab.map.y, lab.map.x];
+  const targetZoom = 3.5;
+
+  map.flyTo(target, targetZoom, {
+    animate: true,
+    duration: 0.6
+  });
+
+  map.once("moveend", () => {
+    marker.openPopup();
+  });
+
   highlightLab(id);
 }
 
