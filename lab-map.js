@@ -143,14 +143,22 @@ function focusLab(id) {
   const target = [lab.map.y, lab.map.x];
   const targetZoom = 1.75;
 
+  // Stop any previous map movement
+  map.stop();
+
+  // Close any open popup before moving
+  map.closePopup();
+
+  // Center and zoom to the selected lab
   map.flyTo(target, targetZoom, {
     animate: true,
-    duration: 0.6
+    duration: 0.5
   });
 
-  map.once("moveend", () => {
+  // Open popup after the map has had time to move
+  setTimeout(() => {
     marker.openPopup();
-  });
+  }, 550);
 
   highlightLab(id);
 }
