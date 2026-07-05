@@ -21,8 +21,8 @@ const bounds = [[0, 0], [imageHeight, imageWidth]];
 L.imageOverlay(mapImage, bounds).addTo(map);
 map.fitBounds(bounds);
 
-// Starts the map slightly zoomed in
-map.setView([imageHeight / 2, imageWidth / 2], 0.25);
+// Starts only slightly closer than full view
+map.setZoom(-0.25);
 
 const markerLayer = L.layerGroup().addTo(map);
 const markerMap = {};
@@ -142,7 +142,7 @@ function focusLab(id) {
   if (!lab || !marker) return;
 
   const target = [lab.map.y, lab.map.x];
-  const targetZoom = 3.5;
+  const targetZoom = 2.25;
 
   map.flyTo(target, targetZoom, {
     animate: true,
