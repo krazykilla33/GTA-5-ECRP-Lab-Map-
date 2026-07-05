@@ -136,3 +136,13 @@ body {
 .leaflet-popup-tip {
   background: #181c25;
 }
+
+.status-open {
+  color: #22c55e;
+  font-weight: 800;
+}
+
+.status-closed {
+  color: #ef4444;
+  font-weight: 800;
+}
