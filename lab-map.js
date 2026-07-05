@@ -139,7 +139,7 @@ function focusLab(id) {
   if (!lab || !marker) return;
 
   const target = [lab.map.y, lab.map.x];
-  const targetZoom = 2.25;
+  const targetZoom = 1.75;
 
   map.flyTo(target, targetZoom, {
     animate: true,
