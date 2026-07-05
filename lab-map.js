@@ -41,15 +41,12 @@ function getVisibleLabs() {
   const search = document.getElementById("labSearch").value.toLowerCase().trim();
 
   return labs.filter(lab => {
-    const mapped = hasCoords(lab);
-
     const matchesSearch =
       lab.name.toLowerCase().includes(search);
 
     const matchesFilter =
       currentFilter === "all" ||
-      currentFilter === "mapped" && mapped ||
-      currentFilter === "unmapped" && !mapped;
+      lab.status === currentFilter;
 
     return matchesSearch && matchesFilter;
   });
@@ -75,12 +72,14 @@ function renderLabs() {
         icon: createLabIcon()
       }).addTo(markerLayer);
 
+      const popupStatusText = lab.status === "open" ? "OPEN" : "CLOSED";
+
       marker.bindPopup(`
         <strong>${lab.name}</strong><br>
         Coke Tables: ${lab.tables.coke}<br>
         Crack Tables: ${lab.tables.crack}<br>
         Plant Tables: ${lab.tables.plant}<br>
-        X: ${lab.map.x}, Y: ${lab.map.y}
+        Status: ${popupStatusText}
       `);
 
       marker.on("click", () => {
@@ -95,15 +94,18 @@ function renderLabs() {
     item.className = "lab-item";
     item.id = `list-${lab.id}`;
 
+    const statusText = lab.status === "open" ? "OPEN" : "CLOSED";
+    const statusClass = lab.status === "open" ? "status-open" : "status-closed";
+
     item.innerHTML = `
       <div class="lab-name">${lab.name}</div>
+
       <div class="lab-meta">
         Coke: ${lab.tables.coke} • Crack: ${lab.tables.crack} • Plant: ${lab.tables.plant}
       </div>
+
       <div class="lab-meta">
-        ${mapped 
-          ? `<span class="mapped">MAPPED</span> — X: ${lab.map.x}, Y: ${lab.map.y}` 
-          : `<span class="unmapped">UNMAPPED</span>`}
+        Status: <span class="${statusClass}">${statusText}</span>
       </div>
     `;
 
@@ -169,49 +171,18 @@ function highlightLab(id) {
   }
 }
 
-map.on("click", function(e) {
-  if (!selectedLabId) {
-    console.log("Clicked map coordinate:", {
-      x: Math.round(e.latlng.lng),
-      y: Math.round(e.latlng.lat)
-    });
-    return;
-  }
-
-  const lab = labs.find(l => l.id === selectedLabId);
-
-  if (!lab) return;
-
-  const x = Math.round(e.latlng.lng);
-  const y = Math.round(e.latlng.lat);
-
-  const confirmed = confirm(`Set ${lab.name} marker here?\n\nx: ${x}, y: ${y}`);
-
-  if (!confirmed) return;
-
-  lab.map.x = x;
-  lab.map.y = y;
-
-  console.log("Updated lab:", lab);
-  console.log("Copy this full LABS data back into data/labs.js:");
-  console.log(JSON.stringify(labs, null, 2));
-
-  renderLabs();
-  focusLab(lab.id);
-});
-
 document.getElementById("showAllBtn").addEventListener("click", () => {
   currentFilter = "all";
   renderLabs();
 });
 
-document.getElementById("showMappedBtn").addEventListener("click", () => {
-  currentFilter = "mapped";
+document.getElementById("showOpenBtn").addEventListener("click", () => {
+  currentFilter = "open";
   renderLabs();
 });
 
-document.getElementById("showUnmappedBtn").addEventListener("click", () => {
-  currentFilter = "unmapped";
+document.getElementById("showClosedBtn").addEventListener("click", () => {
+  currentFilter = "closed";
   renderLabs();
 });
 
