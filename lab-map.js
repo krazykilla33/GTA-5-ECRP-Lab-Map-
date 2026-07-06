@@ -13,7 +13,7 @@ const map = L.map("labMap", {
   minZoom: -2,
   maxZoom: 5,
   zoomSnap: 0.25,
-  wheelPxPerZoomLevel: 90
+  wheelPxPerZoomLevel: 90,
   attributionControl: false
 });
 
@@ -29,12 +29,14 @@ function hasCoords(lab) {
   return lab.map && lab.map.x !== null && lab.map.y !== null;
 }
 
-function createLabIcon() {
+function createLabIcon(lab) {
+  const statusClass = lab.status === "open" ? "marker-open" : "marker-closed";
+
   return L.divIcon({
     className: "",
-    html: `<div class="marker-dot"></div>`,
-    iconSize: [24, 24],
-    iconAnchor: [12, 12]
+    html: `<div class="marker-dot ${statusClass}"></div>`,
+    iconSize: [16, 16],
+    iconAnchor: [8, 8]
   });
 }
 
@@ -70,11 +72,9 @@ function renderLabs() {
 
     if (mapped) {
       const marker = L.marker([lab.map.y, lab.map.x], {
-        icon: createLabIcon()
+        icon: createLabIcon(lab)
       }).addTo(markerLayer);
-
-      const popupStatusText = lab.status === "open" ? "OPEN" : "CLOSED";
-
+      
       const popupStatusText = lab.status === "open" ? "OPEN" : "CLOSED";
       const popupStatusClass = lab.status === "open" ? "popup-open" : "popup-closed";
 
@@ -143,13 +143,14 @@ function renderLabs() {
 }
 
 function selectLab(id) {
-  selectedLabId = id;
-
   const lab = labs.find(l => l.id === id);
+  if (!lab) return;
+
+  selectedLabId = id;
 
   document.getElementById("selectedLabBox").innerHTML = `
     Selected: <strong>${lab.name}</strong><br>
-    Click the map to place or move this lab.
+    Showing this lab on the map.
   `;
 
   highlightLab(id);
