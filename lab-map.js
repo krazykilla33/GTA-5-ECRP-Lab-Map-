@@ -14,6 +14,7 @@ const map = L.map("labMap", {
   maxZoom: 5,
   zoomSnap: 0.25,
   wheelPxPerZoomLevel: 90
+  attributionControl: false
 });
 
 const bounds = [[0, 0], [imageHeight, imageWidth]];
@@ -74,12 +75,32 @@ function renderLabs() {
 
       const popupStatusText = lab.status === "open" ? "OPEN" : "CLOSED";
 
+      const popupStatusText = lab.status === "open" ? "OPEN" : "CLOSED";
+      const popupStatusClass = lab.status === "open" ? "popup-open" : "popup-closed";
+
       marker.bindPopup(`
-        <strong>${lab.name}</strong><br>
-        Coke Tables: ${lab.tables.coke}<br>
-        Crack Tables: ${lab.tables.crack}<br>
-        Plant Tables: ${lab.tables.plant}<br>
-        Status: ${popupStatusText}
+        <div class="lab-popup">
+          <div class="lab-popup-title">${lab.name}</div>
+
+          <div class="lab-popup-row">
+            <span>Coke Tables:</span>
+            <strong>${lab.tables.coke}</strong>
+          </div>
+
+          <div class="lab-popup-row">
+            <span>Crack Tables:</span>
+            <strong>${lab.tables.crack}</strong>
+          </div>
+
+          <div class="lab-popup-row">
+            <span>Plant Tables:</span>
+            <strong>${lab.tables.plant}</strong>
+          </div>
+
+          <div class="lab-popup-status ${popupStatusClass}">
+            ${popupStatusText}
+          </div>
+        </div>
       `);
 
       marker.on("click", () => {
